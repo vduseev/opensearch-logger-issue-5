@@ -121,3 +121,47 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Testing the Issue #5
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        }
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+            "stream": "ext://sys.stdout",
+        },
+        "opensearch": {
+            "level": "DEBUG",
+            "class": "opensearch_logger.OpenSearchHandler",
+            "index_name": "my-logs",
+            "extra_fields": {"App": "test", "Environment": "dev"},
+            "hosts": [{"host": "localhost", "port": 9200}],
+            "http_auth": ("admin", "admin"),
+            "http_compress": True,
+            "use_ssl": True,
+            "verify_certs": False,
+            "ssl_assert_hostname": False,
+            "ssl_show_warn": False,
+        },
+    },
+    "loggers": {
+        "root": {
+            "handlers": ["console", "opensearch"],
+            "level": "INFO",
+            "propogate": False,
+        },
+        "django": {
+            "handlers": ["console", "opensearch"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}
