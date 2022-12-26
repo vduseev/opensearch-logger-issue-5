@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+
+  opensearch-index:
+    image: opensearchproject/opensearch:latest
+    container_name: opensearch-index
+    environment:
+      - cluster.name=opensearch-index-cluster
+      - node.name=opensearch-index
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+    expose:
+      - "9200"
+      - "9600"
+    ports:
+      - "9200:9200"
+    networks:
+      - opensearch-logger-django-bug
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:latest
+    container_name: opensearch-dashboards
+    depends_on:
+      - opensearch-index
+    environment:
+      - OPENSEARCH_HOSTS=["https://opensearch-index:9200"]
+      - "OPENSEARCH_JAVA_OPTS=-Xms256m -Xmx256m"
+    expose:
+      - "5601"
+    networks:
+      - opensearch-logger-django-bug
+    ports:
+      - "5601:5601"
+
+networks:
+  opensearch-logger-django-bug:
+    name: opensearch-logger-django-bug
