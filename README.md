@@ -1,5 +1,9 @@
 # Issue #5 investgation
 
+Related to [Issue #5](https://github.com/vduseev/opensearch-logger/issues/5)
+in the [opensearch-logger](https://github.com/vduseev/opensearch-logger)
+repo.
+
 ## Requirements
 
 * You need Python 3.11 with pyenv or installed directly. However, any
